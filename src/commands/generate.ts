@@ -34,12 +34,16 @@ export default class Generate extends Command {
     return str.replace(/-\w/g, m => m[1].toUpperCase())
   }
 
-  private generateRpcInterface(json: string): string {
+  private generateRpcInterface(json: string | RpcServer): string {
     let rpcServer: RpcServer
-    try {
-      rpcServer = JSON.parse(json)
-    } catch {
-      this.error('Schema must be a valid json')
+    if (typeof json === 'string') {
+      try {
+        rpcServer = JSON.parse(json)
+      } catch {
+        this.error('Schema must be a valid json')
+      }
+    } else {
+      rpcServer = json
     }
 
     const interfaces: string[] = []
